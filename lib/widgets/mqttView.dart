@@ -268,7 +268,7 @@ class _MQTTViewState extends State<MQTTView> {
         hintStyle: TextStyle(color: Colors.lightBlue.withOpacity(.5)),
         suffixIcon: IconButton(
           onPressed: () {
-            scanQR(_scanBarcodeTextController, mode);
+            scanQR(controller, mode);
           },
           icon: const Icon(
             Icons.camera_alt,

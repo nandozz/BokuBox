@@ -21,7 +21,7 @@ class MQTTAppState with ChangeNotifier {
     _receivedText = text;
 
     if (text.contains('List')) {
-      _updateList = 'No. ...' + text.substring(5, text.length);
+      _updateList = 'Code : ' + text.substring(5, text.length);
     }
     _historyText = _historyText + '\n' + _receivedText;
     notifyListeners();
