@@ -12,16 +12,20 @@ class MQTTAppState with ChangeNotifier {
   // ignore: always_specify_types
   String _updateList = '';
 
-  void changeLock(bool isLock) {
-    _isLock = !isLock;
-    notifyListeners();
-  }
+  // void changeLock(bool isLock) {
+  //   _isLock = !isLock;
+  //   notifyListeners();
+  // }
 
   void setReceivedText(String text) {
     _receivedText = text;
 
     if (text.contains('List')) {
       _updateList = 'Code : ' + text.substring(5, text.length);
+    } else if (text.contains('Open')) {
+      _isLock = false;
+    } else if (text.contains('Close')) {
+      _isLock = true;
     }
     _historyText = _historyText + '\n' + _receivedText;
     notifyListeners();

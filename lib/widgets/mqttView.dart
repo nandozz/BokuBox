@@ -223,7 +223,7 @@ class _MQTTViewState extends State<MQTTView> {
 
             ////////////////////////////////////////
 
-            /////////////////////////////////////////
+            ///////////////// OPEN ////////////////////////
             TextButton.icon(
               onPressed: () {
                 if (currentAppState.getAppConnectionState ==
@@ -237,7 +237,7 @@ class _MQTTViewState extends State<MQTTView> {
                   //   title: Text('is the device open?'),
                   // );
 
-                  currentAppState.changeLock(true);
+                  // currentAppState.changeLock(true);
                 } else
                   _configureAndConnect();
               },
@@ -415,10 +415,10 @@ class _MQTTViewState extends State<MQTTView> {
       iconSize: 35,
       onPressed: state == MQTTAppConnectionState.connected
           ? () {
-              currentAppState.changeLock(currentAppState.getState);
+              // currentAppState.changeLock(currentAppState.getState);
               currentAppState.getState
-                  ? _publishMessage('${_bokuPassTextController.text} close')
-                  : _publishMessage('${_bokuPassTextController.text} open');
+                  ? _publishMessage('${_bokuPassTextController.text} open')
+                  : _publishMessage('${_bokuPassTextController.text} close');
             }
           : null, //
 
@@ -448,7 +448,7 @@ class _MQTTViewState extends State<MQTTView> {
     if (Platform.isAndroid) {
       osPrefix = 'Flutter_Android';
     }
-    final String _topic = 'Boku/${_bokuIDTextController.text}';
+    final String _topic = 'BokuBox/user/${_bokuIDTextController.text}';
 
     manager = MQTTManager(
         host: 'broker.hivemq.com',
