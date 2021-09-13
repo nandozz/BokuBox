@@ -12,11 +12,6 @@ class MQTTAppState with ChangeNotifier {
   // ignore: always_specify_types
   String _updateList = '';
 
-  // void changeLock(bool isLock) {
-  //   _isLock = !isLock;
-  //   notifyListeners();
-  // }
-
   void setReceivedText(String text) {
     _receivedText = text;
 

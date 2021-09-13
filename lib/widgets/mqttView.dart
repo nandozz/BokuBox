@@ -98,7 +98,7 @@ class _MQTTViewState extends State<MQTTView> {
             //     currentAppState.getAppConnectionState),
             // const SizedBox(height: 10),
             const Text(
-              'Hero',
+              'Smart Box',
               style: TextStyle(fontSize: 25),
             ),
             const SizedBox(height: 35),
@@ -107,6 +107,7 @@ class _MQTTViewState extends State<MQTTView> {
             const SizedBox(height: 10),
             _buildTextFieldWith(_bokuPassTextController, 'Boku Password',
                 currentAppState.getAppConnectionState),
+            // CheckboxListTile(value: value, onChanged: onChanged)
             const SizedBox(height: 10),
             _buildConnecteButtonFrom(currentAppState.getAppConnectionState),
             const SizedBox(height: 10),
@@ -115,15 +116,13 @@ class _MQTTViewState extends State<MQTTView> {
               // ignore: always_specify_types
               children: [
                 IconButton(
-                  onPressed: () {
-                    currentAppState.getAppConnectionState ==
-                            MQTTAppConnectionState.connected
-                        ? _publishMessage(
-                            '${_bokuPassTextController.text} listView')
-                        : _configureAndConnect();
-
-                    uplist = currentAppState.getReceivedText;
-                  },
+                  onPressed: currentAppState.getAppConnectionState ==
+                          MQTTAppConnectionState.connected
+                      ? () {
+                          _publishMessage(
+                              '${_bokuPassTextController.text} listView');
+                        }
+                      : null,
                   icon: const Icon(Icons.list_alt),
                 ),
                 const SizedBox(height: 10),
@@ -135,13 +134,13 @@ class _MQTTViewState extends State<MQTTView> {
                       Text(currentAppState.getUpdateList),
                       // const SizedBox(height: 10),
                       IconButton(
-                        onPressed: () {
-                          currentAppState.getAppConnectionState ==
-                                  MQTTAppConnectionState.connected
-                              ? _publishMessage(
-                                  '${_bokuPassTextController.text} listClear')
-                              : _configureAndConnect();
-                        },
+                        onPressed: currentAppState.getAppConnectionState ==
+                                MQTTAppConnectionState.connected
+                            ? () {
+                                _publishMessage(
+                                    '${_bokuPassTextController.text} listClear');
+                              }
+                            : null,
                         icon: const Icon(Icons.delete),
                       ),
                     ],
@@ -162,23 +161,23 @@ class _MQTTViewState extends State<MQTTView> {
                   // ignore: always_specify_types
                   children: [
                     TextButton(
-                      onPressed: () {
-                        currentAppState.getAppConnectionState ==
-                                MQTTAppConnectionState.connected
-                            ? _publishMessage(
-                                '${_bokuPassTextController.text} restart')
-                            : _configureAndConnect();
-                      },
+                      onPressed: currentAppState.getAppConnectionState ==
+                              MQTTAppConnectionState.connected
+                          ? () {
+                              _publishMessage(
+                                  '${_bokuPassTextController.text} restart');
+                            }
+                          : null,
                       child: const Text('Restart'),
                     ),
                     TextButton(
-                      onPressed: () {
-                        currentAppState.getAppConnectionState ==
-                                MQTTAppConnectionState.connected
-                            ? _publishMessage(
-                                '${_bokuPassTextController.text} reset')
-                            : _configureAndConnect();
-                      },
+                      onPressed: currentAppState.getAppConnectionState ==
+                              MQTTAppConnectionState.connected
+                          ? () {
+                              _publishMessage(
+                                  '${_bokuPassTextController.text} reset');
+                            }
+                          : null,
                       child: const Text(
                         'Reset',
                         style: TextStyle(
@@ -223,7 +222,7 @@ class _MQTTViewState extends State<MQTTView> {
 
             ////////////////////////////////////////
 
-            ///////////////// OPEN ////////////////////////
+            /////////////////  OPEN ////////////////////////
             TextButton.icon(
               onPressed: () {
                 if (currentAppState.getAppConnectionState ==
@@ -232,12 +231,6 @@ class _MQTTViewState extends State<MQTTView> {
                   sendList =
                       sendList.substring(sendList.length - 5, sendList.length);
                   _publishMessage('courier $sendList');
-
-                  // const AlertDialog(
-                  //   title: Text('is the device open?'),
-                  // );
-
-                  // currentAppState.changeLock(true);
                 } else
                   _configureAndConnect();
               },
@@ -396,17 +389,6 @@ class _MQTTViewState extends State<MQTTView> {
             }
           : null,
     );
-
-    // RaisedButton(
-    //   color: Colors.green,
-    //   child: const Text('Send'),
-    //   onPressed: state == MQTTAppConnectionState.connected
-    //       ? () {
-    //           _publishMessage(
-    //               '${_bokuPassTextController.text} add ${_messageTextController.text}');
-    //         }
-    //       : null, //
-    // );
   }
 
   Widget _buildLockButtonFrom(MQTTAppConnectionState state) {
