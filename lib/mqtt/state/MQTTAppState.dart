@@ -11,6 +11,13 @@ class MQTTAppState with ChangeNotifier {
   // ignore: unused_field
   // ignore: always_specify_types
   String _updateList = '';
+  String _boxID = '';
+  String _boxPass = '';
+
+  void setBox(String id, String pass) {
+    _boxID = id;
+    _boxPass = pass;
+  }
 
   void setReceivedText(String text) {
     _receivedText = text;
@@ -40,6 +47,8 @@ class MQTTAppState with ChangeNotifier {
   String get getReceivedText => _receivedText;
   String get getHistoryText => _historyText;
   bool get getState => _isLock;
+  String get getBoxID => _boxID;
+  String get getBoxPass => _boxPass;
 
   MQTTAppConnectionState get getAppConnectionState => _appConnectionState;
 }
