@@ -17,6 +17,7 @@ class MQTTAppState with ChangeNotifier {
   void setBox(String id, String pass) {
     _boxID = id;
     _boxPass = pass;
+    notifyListeners();
   }
 
   void setReceivedText(String text) {

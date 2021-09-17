@@ -1,6 +1,8 @@
 // import 'dart:async';
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
+import 'package:flutter_mqtt_app/pages/courier_page.dart';
+import 'package:flutter_mqtt_app/pages/home_page.dart';
 // import 'package:flutter_mqtt_app/pages/home_page.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_mqtt_app/mqtt/state/MQTTAppState.dart';
@@ -8,10 +10,6 @@ import 'package:flutter_mqtt_app/mqtt/MQTTManager.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter/services.dart';
-
-// String uplist = '';
-// ignore: always_specify_types
-// List<String> updateList = [];
 
 class MQTTView extends StatefulWidget {
   @override
@@ -21,11 +19,9 @@ class MQTTView extends StatefulWidget {
 }
 
 class _MQTTViewState extends State<MQTTView> {
-  final TextEditingController _newCodeTextController = TextEditingController();
+  // final TextEditingController _newCodeTextController = TextEditingController();
   final TextEditingController _bokuIDTextController = TextEditingController();
   final TextEditingController _bokuPassTextController = TextEditingController();
-  // final TextEditingController _scanBarcodeTextController =
-  //     TextEditingController();
 
   late MQTTAppState currentAppState;
   late MQTTManager manager;
@@ -43,7 +39,7 @@ class _MQTTViewState extends State<MQTTView> {
 
   @override
   void dispose() {
-    _newCodeTextController.dispose();
+    // _newCodeTextController.dispose();
     _bokuIDTextController.dispose();
     _bokuPassTextController.dispose();
     super.dispose();
@@ -109,24 +105,24 @@ class _MQTTViewState extends State<MQTTView> {
             /////////////////////////      login     /////////////////////////
             _buildTextFieldWith(_bokuIDTextController, 'Boku ID',
                 currentAppState.getAppConnectionState),
-            const SizedBox(height: 10),
+            const SizedBox(height: 35),
             _buildTextFieldWith(_bokuPassTextController, 'Boku Password',
                 currentAppState.getAppConnectionState),
             // CheckboxListTile(value: value, onChanged: onChanged)
-            const SizedBox(height: 10),
+            const SizedBox(height: 35),
             _buildConnecteButtonFrom(currentAppState.getAppConnectionState),
-            const SizedBox(height: 10),
+            const SizedBox(height: 35),
             ElevatedButton(
-              child: const Text('Iam a courier'),
+              child: const Text('Courier'),
               onPressed: () {
-                // Navigator.pop(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) {
-                //       return CourierPage();
-                //     },
-                //   ),
-                // );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<CourierPage>(
+                    builder: (BuildContext context) {
+                      return CourierPage();
+                    },
+                  ),
+                );
               },
             )
 
@@ -321,10 +317,7 @@ class _MQTTViewState extends State<MQTTView> {
   Widget _buildTextFieldWith(TextEditingController controller, String hintText,
       MQTTAppConnectionState state) {
     bool shouldEnable = false;
-    if (controller == _newCodeTextController &&
-        state == MQTTAppConnectionState.connected) {
-      shouldEnable = true;
-    } else if ((controller == _bokuIDTextController &&
+    if ((controller == _bokuIDTextController &&
             state == MQTTAppConnectionState.disconnected) ||
         (controller == _bokuPassTextController &&
             state == MQTTAppConnectionState.disconnected)) {
@@ -378,15 +371,8 @@ class _MQTTViewState extends State<MQTTView> {
                     _bokuPassTextController.text.isNotEmpty) {
                   currentAppState.setBox(
                       _bokuIDTextController.text, _bokuPassTextController.text);
+
                   _configureAndConnect();
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) {
-                  //       return HomePage();
-                  //     },
-                  //   ),
-                  // );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -394,7 +380,16 @@ class _MQTTViewState extends State<MQTTView> {
                           const Text('Please fill the Box\'s ID and Password'),
                       action: SnackBarAction(
                         label: 'OK',
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute<CourierPage>(
+                              builder: (BuildContext context) {
+                                return HomePage();
+                              },
+                            ),
+                          );
+                        },
                       ),
                     ),
                   );
@@ -485,22 +480,19 @@ class _MQTTViewState extends State<MQTTView> {
         state: currentAppState);
     manager.initializeMQTTClient();
     manager.connect();
-    _publishMessage('${_bokuPassTextController.text} ping');
+    // _publishMessage('${_bokuPassTextController.text} ping');
+    manager.publish('${_bokuPassTextController.text} ping');
   }
 
   void _disconnect() {
     manager.disconnect();
   }
 
-  void _publishMessage(String text) {
-    // String osPrefix = 'Flutter_iOS';
-    // if (Platform.isAndroid) {
-    //   osPrefix = 'Flutter_Android';
-    // }
-    final String message = text;
-    manager.publish(message);
-    _newCodeTextController.clear();
-  }
+  // void _publishMessage(String text) {
+  //   final String message = text;
+  //   manager.publish(message);
+  //   _newCodeTextController.clear();
+  // }
 
   Future<void> scanQR(TextEditingController controller, String mode) async {
     String barcodeScanRes;

@@ -15,15 +15,17 @@ class MyApp extends StatelessWidget {
 
      */
 
-    return MaterialApp(
+    // ignore: always_specify_types
+    return ChangeNotifierProvider(
+      create: (_) => MQTTAppState(),
+      child: MaterialApp(
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: ChangeNotifierProvider<MQTTAppState>(
-          create: (_) => MQTTAppState(),
-          child: MQTTView(),
-        ));
+        home: MQTTView(),
+      ),
+    );
   }
 }

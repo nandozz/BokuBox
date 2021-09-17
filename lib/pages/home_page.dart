@@ -26,101 +26,115 @@ class HomePage extends StatelessWidget {
     boxID = currentAppState.getBoxID;
     boxPass = currentAppState.getBoxPass;
 
-    return Scaffold(
-      body: Column(
-        // ignore: always_specify_types
-        children: [
-          const Text(
-            'Smart Box',
-            style: TextStyle(fontSize: 25),
-          ),
-          const SizedBox(height: 45),
-          Lottie.asset(
-            'assets/lottie/walkingbox.json',
-            // 'https://assets7.lottiefiles.com/packages/lf20_i7bmwsni.json',
-            width: 75,
-            height: 75,
-            fit: BoxFit.cover,
-          ),
-          const SizedBox(height: 45),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            // ignore: always_specify_types
-            children: [
-              IconButton(
-                onPressed: currentAppState.getAppConnectionState ==
-                        MQTTAppConnectionState.connected
-                    ? () {
-                        _publishMessage('$boxPass listView');
-                      }
-                    : null,
-                icon: const Icon(Icons.list_alt),
-              ),
-              const SizedBox(height: 10),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  // ignore: always_specify_types
-                  children: [
-                    Text(currentAppState.getUpdateList),
-                    // const SizedBox(height: 10),
-                    IconButton(
-                      onPressed: currentAppState.getAppConnectionState ==
-                              MQTTAppConnectionState.connected
-                          ? () {
-                              _publishMessage('$boxPass listClear');
-                            }
-                          : null,
-                      icon: const Icon(Icons.delete),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          _buildPublishMessageRow(),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            // ignore: always_specify_types
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    print('${currentAppState.getAppConnectionState}');
+
+    return ChangeNotifierProvider<MQTTAppState>(
+      create: (_) => MQTTAppState(),
+      child: Scaffold(
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(25),
+            child: SingleChildScrollView(
+              child: Column(
                 // ignore: always_specify_types
                 children: [
-                  TextButton(
-                    onPressed: currentAppState.getAppConnectionState ==
-                            MQTTAppConnectionState.connected
-                        ? () {
-                            _publishMessage('$boxPass restart');
-                          }
-                        : null,
-                    child: const Text('Restart'),
+                  const Text(
+                    'Smart Box',
+                    style: TextStyle(fontSize: 25, color: Colors.amber),
                   ),
-                  TextButton(
-                    onPressed: currentAppState.getAppConnectionState ==
-                            MQTTAppConnectionState.connected
-                        ? () {
-                            _publishMessage('$boxPass reset');
-                          }
-                        : null,
-                    child: const Text(
-                      'Reset',
-                      style: TextStyle(
-                        color: Colors.redAccent,
+                  const SizedBox(height: 45),
+                  Lottie.asset(
+                    'assets/lottie/walkingbox.json',
+                    // 'https://assets7.lottiefiles.com/packages/lf20_i7bmwsni.json',
+                    width: 75,
+                    height: 75,
+                    fit: BoxFit.cover,
+                  ),
+                  const SizedBox(height: 45),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    // ignore: always_specify_types
+                    children: [
+                      IconButton(
+                        onPressed: currentAppState.getAppConnectionState ==
+                                MQTTAppConnectionState.connected
+                            ? () {
+                                _publishMessage('$boxPass listView');
+                              }
+                            : null,
+                        icon: const Icon(Icons.list_alt, color: Colors.amber),
                       ),
-                    ),
+                      const SizedBox(height: 10),
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          // ignore: always_specify_types
+                          children: [
+                            Text('Code : ${currentAppState.getUpdateList}'),
+                            // const SizedBox(height: 10),
+                            IconButton(
+                              onPressed:
+                                  currentAppState.getAppConnectionState ==
+                                          MQTTAppConnectionState.connected
+                                      ? () {
+                                          _publishMessage('$boxPass listClear');
+                                        }
+                                      : null,
+                              icon: const Icon(Icons.delete),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 35),
+                  _buildPublishMessageRow(),
+                  const SizedBox(height: 35),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // ignore: always_specify_types
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        // ignore: always_specify_types
+                        children: [
+                          TextButton(
+                            onPressed: currentAppState.getAppConnectionState ==
+                                    MQTTAppConnectionState.connected
+                                ? () {
+                                    _publishMessage('$boxPass restart');
+                                  }
+                                : null,
+                            child: const Text('Restart'),
+                          ),
+                          TextButton(
+                            onPressed: currentAppState.getAppConnectionState ==
+                                    MQTTAppConnectionState.connected
+                                ? () {
+                                    _publishMessage('$boxPass reset');
+                                  }
+                                : null,
+                            child: const Text(
+                              'Reset',
+                              style: TextStyle(
+                                color: Colors.redAccent,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        width: 25,
+                      ),
+                      _buildLockButtonFrom(
+                          currentAppState.getAppConnectionState),
+                    ],
                   ),
                 ],
               ),
-              const SizedBox(
-                width: 25,
-              ),
-              _buildLockButtonFrom(currentAppState.getAppConnectionState),
-            ],
+            ),
           ),
-        ],
+        ),
       ),
     );
   }
@@ -168,8 +182,8 @@ class HomePage extends StatelessWidget {
           : null, //
 
       icon: currentAppState.getState
-          ? const Icon(Icons.lock)
-          : const Icon(Icons.lock_open),
+          ? const Icon(Icons.lock, color: Colors.amber)
+          : const Icon(Icons.lock_open, color: Colors.amber),
       // () => lock(),
     );
   }
@@ -197,7 +211,7 @@ class HomePage extends StatelessWidget {
       icon: const Icon(
         Icons.add_box,
         size: 35,
-        color: Colors.lightBlue,
+        color: Colors.amber,
       ),
       onPressed: state == MQTTAppConnectionState.connected
           ? () {
