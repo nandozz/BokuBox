@@ -24,7 +24,7 @@ class MQTTAppState with ChangeNotifier {
     _receivedText = text;
 
     if (text.contains('List')) {
-      _updateList = 'Code : ' + text.substring(5, text.length);
+      _updateList = text.substring(5, text.length);
     } else if (text.contains('Open')) {
       _isLock = false;
     } else if (text.contains('Close')) {

@@ -1,5 +1,7 @@
 // import 'dart:async';
 // import 'dart:io' show Platform;
+// import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_mqtt_app/mqtt/state/MQTTAppState.dart';
@@ -12,11 +14,12 @@ String boxPass = '';
 
 // ignore: must_be_immutable
 class HomePage extends StatelessWidget {
-  // const HomePage({ Key? key }) : super(key: key);
-  final TextEditingController _newCodeTextController = TextEditingController();
-
+  // ignore: avoid_unused_constructor_parameters
   late MQTTAppState currentAppState;
-  late MQTTManager manager;
+  late MQTTManager manager = manager;
+  final TextEditingController _newCodeTextController = TextEditingController();
+  // ignore: sort_constructors_first
+  HomePage({required this.manager});
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +116,9 @@ class HomePage extends StatelessWidget {
                                 ? () {
                                     _publishMessage('$boxPass reset');
                                   }
-                                : null,
+                                : () {
+                                    Navigator.pop(context);
+                                  },
                             child: const Text(
                               'Reset',
                               style: TextStyle(
@@ -130,6 +135,8 @@ class HomePage extends StatelessWidget {
                           currentAppState.getAppConnectionState),
                     ],
                   ),
+                  const SizedBox(height: 35),
+                  _buildScrollableTextWith(currentAppState.getHistoryText)
                 ],
               ),
             ),
@@ -144,6 +151,29 @@ class HomePage extends StatelessWidget {
   //   _newCodeTextController.dispose();
   //   super.dispose();
   // }
+  Widget _buildScrollableTextWith(String text) {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        // ignore: always_specify_types
+        children: [
+          IconButton(
+            onPressed: () {
+              currentAppState.setClearHistoryText();
+            },
+            icon: const Icon(Icons.refresh),
+          ),
+          Container(
+            width: 400,
+            height: 200,
+            child: SingleChildScrollView(
+              child: Text(text),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   void _publishMessage(String text) {
     // String osPrefix = 'Flutter_iOS';

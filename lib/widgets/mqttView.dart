@@ -3,7 +3,6 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_mqtt_app/pages/courier_page.dart';
 import 'package:flutter_mqtt_app/pages/home_page.dart';
-// import 'package:flutter_mqtt_app/pages/home_page.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_mqtt_app/mqtt/state/MQTTAppState.dart';
 import 'package:flutter_mqtt_app/mqtt/MQTTManager.dart';
@@ -364,7 +363,9 @@ class _MQTTViewState extends State<MQTTView> {
           // ignore: deprecated_member_use
           child: RaisedButton(
               color: Colors.amber,
-              child: const Text('Login'),
+              child: state == MQTTAppConnectionState.connected
+                  ? const Text('Login')
+                  : const Text('Connect'),
               onPressed: () {
                 if (state == MQTTAppConnectionState.disconnected &&
                     _bokuIDTextController.text.isNotEmpty &&
@@ -374,22 +375,27 @@ class _MQTTViewState extends State<MQTTView> {
 
                   _configureAndConnect();
                 } else {
+                  manager.publish('${_bokuPassTextController.text} ping');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<CourierPage>(
+                      builder: (BuildContext context) {
+                        return HomePage(
+                          manager: manager,
+                        );
+                      },
+                    ),
+                  );
+                }
+                if (_bokuIDTextController.text.isEmpty &&
+                    _bokuPassTextController.text.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content:
                           const Text('Please fill the Box\'s ID and Password'),
                       action: SnackBarAction(
                         label: 'OK',
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute<CourierPage>(
-                              builder: (BuildContext context) {
-                                return HomePage();
-                              },
-                            ),
-                          );
-                        },
+                        onPressed: () {},
                       ),
                     ),
                   );
