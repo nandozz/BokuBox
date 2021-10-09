@@ -364,8 +364,21 @@ class _MQTTViewState extends State<MQTTView> {
           // ignore: deprecated_member_use
           child: RaisedButton(
               color: Colors.amber,
-              child: const Text('Login'),
+              child: (state == MQTTAppConnectionState.connected)
+                  ? const Text('Login')
+                  : const Text('Connect'),
               onPressed: () {
+                if (state == MQTTAppConnectionState.connected) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<CourierPage>(
+                      builder: (BuildContext context) {
+                        return HomePage();
+                      },
+                    ),
+                  );
+                }
+
                 if (state == MQTTAppConnectionState.disconnected &&
                     _bokuIDTextController.text.isNotEmpty &&
                     _bokuPassTextController.text.isNotEmpty) {
@@ -380,16 +393,7 @@ class _MQTTViewState extends State<MQTTView> {
                           const Text('Please fill the Box\'s ID and Password'),
                       action: SnackBarAction(
                         label: 'OK',
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute<CourierPage>(
-                              builder: (BuildContext context) {
-                                return HomePage();
-                              },
-                            ),
-                          );
-                        },
+                        onPressed: () {},
                       ),
                     ),
                   );
