@@ -24,13 +24,20 @@ class MQTTAppState with ChangeNotifier {
     _receivedText = text;
 
     if (text.contains('List')) {
-      _updateList = 'Code : ' + text.substring(5, text.length);
+      // _updateList = text.substring(5, text.length);
+      _updateList = text;
+    } else if (text.contains('listempty')) {
+      _updateList = '';
+    }
+    if (text.contains('History')) {
+      _historyText = text;
+    } else if (text.contains('historyempty')) {
+      _historyText = '';
     } else if (text.contains('Open')) {
       _isLock = false;
     } else if (text.contains('Close')) {
       _isLock = true;
     }
-    _historyText = _historyText + '\n' + _receivedText;
     notifyListeners();
   }
 
@@ -41,6 +48,11 @@ class MQTTAppState with ChangeNotifier {
 
   void setClearHistoryText() {
     _historyText = '';
+    notifyListeners();
+  }
+
+  void changeLock(bool isLock) {
+    _isLock = !isLock;
     notifyListeners();
   }
 
